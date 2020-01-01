@@ -19,6 +19,7 @@ import android.widget.ListView;
 import com.xiao.searchappmessage.adapter.MyAdapter;
 import com.xiao.searchappmessage.bean.AppMessage;
 import com.xiao.searchappmessage.common.CommonMethod;
+import com.xiao.searchappmessage.handler.MyHandler;
 import com.xiao.searchappmessage.service.MyService;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String TRANSFORM_MESSAGE = "transform_message";
     private String TRANSFORM_MESSAGE_STATE = "transform_message_state";
     private static String transformMessage = "";
+    private MyHandler myHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        myHandler = MyHandler.getInstance();
+        myHandler.setMainActivity(this);
 
         initView();
         initData();
@@ -78,6 +83,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (transformMessage != null) {
             transforms = transformMessage.split(",");
         }
+
+        if (transforms == null) {
+            transforms = myHandler.getPackageNames();
+        }
+
+
         PackageManager pManager = this.getPackageManager();
 
         List<PackageInfo> allApps = CommonMethod.getAllApps(this);
