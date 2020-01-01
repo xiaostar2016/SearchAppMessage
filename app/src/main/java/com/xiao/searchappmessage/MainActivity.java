@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.xiao.searchappmessage.adapter.MyAdapter;
 import com.xiao.searchappmessage.bean.AppMessage;
@@ -55,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         myHandler = MyHandler.getInstance();
-        myHandler.setMainActivity(this);
 
         initView();
         initData();
@@ -141,6 +141,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void runningAppSwitch(boolean state) {
+        if (isCheckPackageNameContent == null || isCheckPackageNameContent.toString().equals("")) {
+            Toast.makeText(this, "未选择应用", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Intent intent = new Intent(MainActivity.this, MyService.class);
         if (state) {
             ll_display.setVisibility(View.VISIBLE);

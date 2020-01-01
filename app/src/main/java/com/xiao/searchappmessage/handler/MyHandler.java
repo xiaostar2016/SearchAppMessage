@@ -12,12 +12,12 @@ import androidx.annotation.NonNull;
 
 public class MyHandler extends Handler {
     public static final int TRANSFORM_TIME_NUM = 1002;
-    public int CURRENT_APP_DELAY_TIME = 10000;
+    public int CURRENT_APP_DELAY_TIME = 3000;
     private static int currentNum;
     private static MyHandler myHandler;
     private int delayTime = 60000;
     private String[] packageNames;
-    private MainActivity mainActivity;
+    private MyService myService;
 
     public static synchronized MyHandler getInstance() {
         if (myHandler == null) {
@@ -30,8 +30,8 @@ public class MyHandler extends Handler {
         currentNum = 0;
     }
 
-    public void setMainActivity(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
+    public void setService(MyService myService) {
+        this.myService = myService;
     }
 
     public void setDelayTime(int delayTime) {
@@ -46,24 +46,26 @@ public class MyHandler extends Handler {
                 case TRANSFORM_TIME_NUM:
                     Log.d("test", "Handler TRANSFORM_TIME_NUM ");
 
+                    if (packageNames == null || packageNames.length == 0) {
+                        break;
+                    }
+
                     String packageName = packageNames[currentNum];
                     Log.d("test", " packageNames[currentNum]: " + packageName);
-                    if (mainActivity != null) {
-                        CommonMethod.openPackage(mainActivity, packageName);
-                    }
+                    CommonMethod.openPackage(myService, packageName);
+
 
                     currentNum++;
                     if (currentNum == packageNames.length) {
                         currentNum = 0;
                     }
 
-                    if (mainActivity != null) {
-                        if (!packageName.equals(mainActivity.getPackageName())) {
-                            sendEmptyMessageDelayed(TRANSFORM_TIME_NUM, delayTime);
-                        } else {
-                            sendEmptyMessageDelayed(TRANSFORM_TIME_NUM, CURRENT_APP_DELAY_TIME);
-                        }
+                    if (!packageName.equals(myService.getPackageName())) {
+                        sendEmptyMessageDelayed(TRANSFORM_TIME_NUM, delayTime);
+                    } else {
+                        sendEmptyMessageDelayed(TRANSFORM_TIME_NUM, CURRENT_APP_DELAY_TIME);
                     }
+
 
                     break;
                 default:

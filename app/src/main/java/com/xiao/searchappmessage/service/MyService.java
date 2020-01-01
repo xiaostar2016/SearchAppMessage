@@ -32,7 +32,7 @@ public class MyService extends Service {
     public void onCreate() {
         super.onCreate();
         myHandler = MyHandler.getInstance();
-
+        myHandler.setService(this);
     }
 
     @Override
